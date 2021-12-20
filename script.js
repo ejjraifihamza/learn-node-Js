@@ -1,43 +1,58 @@
 /*
-!Events in Node.js
-Every action on a computer is an event. Like when a connection is made or a file is opened.
+!The Nodemailer Module
+The Nodemailer module makes it easy to send emails from your computer.
 
-Objects in Node.js can fire events, like the readStream object fires events when opening and closing a file:
+The Nodemailer module can be downloaded and installed using npm: npm install nodemailer
+After you have downloaded the Nodemailer module, you can include the module in any application:
+let nodemailer = require('nodemailer')
 */
-// var fs = require("fs");
-// var rs = fs.createReadStream("./demofile.txt");
-// /*Write to the console when the file is opened:*/
-// rs.on("open", function () {
-//   console.log("The file is open");
-// });
-
 /*
-!Events Module
-Node.js has a built-in module, called "Events", where you can create-, fire-, and listen for- your own events.
+!Send an Email
+Now you are ready to send emails from your server.
 
-To include the built-in Events module use the require() method. In addition, 
-all event properties and methods are an instance of an EventEmitter object. 
-To be able to access these properties and methods, create an EventEmitter object:
-let events = require('events');
-let eventEmitter = new events.EventEmitter();
+Use the username and password from your selected email provider to send an email. 
+This example will show you how to use your Gmail account to send an email:
 */
+// *Example:
+let nodemailer = require("nodemailer");
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "youremail@gmail.com",
+    pass: "yourpassword",
+  },
+});
 
-/*
-!The EventEmitter Object
-You can assign event handlers to your own events with the EventEmitter object.
-In the example below we have created a function that will be executed when a "scream" event is fired.
-To fire an event, use the emit() method.
-*/
-let events = require("events");
-let eventEmitter = new events.EventEmitter();
-
-//Create an event handler:
-let myEventHandler = function () {
-  console.log("I hear a scream!");
+let mailOptions = {
+  from: "youremail@gmail.com",
+  to: "camenor151@veb27.com",
+  subject: "Sending Email using NodeJs",
+  text: "That was easy!",
 };
+transporter.sendMail(mailOptions, (err, info) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(`Email send: ${info.response}`);
+  }
+});
 
-//Assign the event handler to an event:
-eventEmitter.on("scream", myEventHandler);
+// *To send an email to more than one receiver, add them to the "to" property of the mailOptions object, separated by commas:
+/*
+let mailOptions = {
+  from: 'youremail@gmail.com',
+  to: 'myfriend@yahoo.com, myotherfriend@yahoo.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+}
+*/
 
-//Fire the 'scream' event:
-eventEmitter.emit("scream");
+// *To send HTML formatted text in your email, use the "html" property instead of the "text" property:
+/*
+let mailOptions = {
+  from: 'youremail@gmail.com',
+  to: 'myfriend@yahoo.com',
+  subject: 'Sending Email using Node.js',
+  html: '<h1>Welcome</h1><p>That was easy!</p>'
+}
+*/
