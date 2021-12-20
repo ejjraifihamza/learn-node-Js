@@ -1,34 +1,43 @@
 /*
-!What is NPM?
-*NPM is a package manager for Node.js packages, or modules if you like.
-?The NPM program is installed on your computer when you install Node.js
-What is a Package?
-A package in Node.js contains all the files you need for a module.
+!Events in Node.js
+Every action on a computer is an event. Like when a connection is made or a file is opened.
 
-Modules are JavaScript libraries you can include in your project.
-!Download a Package
-Downloading a package is very easy.
-
-Open the command line interface and tell NPM to download the package you want.
-
-I want to download a package called "upper-case":
-npm install upper-case
-Now you have downloaded and installed your first package!
-NPM creates a folder named "node_modules", where the package will be placed. All packages you install in the future will be placed in this folder.
-!Using a Package
-Once the package is installed, it is ready to use.
-
-Include the "upper-case" package the same way you include any other module:
-let uc = require('upper-case')
-Create a Node.js file that will convert the output "Hello World!" into upper-case letters:
+Objects in Node.js can fire events, like the readStream object fires events when opening and closing a file:
 */
-// ?Example
-let http = require("http");
-let uc = require("upper-case");
-http
-  .createServer((req, res) => {
-    res.writeHead(200, { "Content-type": "text/html" });
-    res.write(uc.upperCase("Hello World!"));
-    res.end();
-  })
-  .listen(8080);
+// var fs = require("fs");
+// var rs = fs.createReadStream("./demofile.txt");
+// /*Write to the console when the file is opened:*/
+// rs.on("open", function () {
+//   console.log("The file is open");
+// });
+
+/*
+!Events Module
+Node.js has a built-in module, called "Events", where you can create-, fire-, and listen for- your own events.
+
+To include the built-in Events module use the require() method. In addition, 
+all event properties and methods are an instance of an EventEmitter object. 
+To be able to access these properties and methods, create an EventEmitter object:
+let events = require('events');
+let eventEmitter = new events.EventEmitter();
+*/
+
+/*
+!The EventEmitter Object
+You can assign event handlers to your own events with the EventEmitter object.
+In the example below we have created a function that will be executed when a "scream" event is fired.
+To fire an event, use the emit() method.
+*/
+let events = require("events");
+let eventEmitter = new events.EventEmitter();
+
+//Create an event handler:
+let myEventHandler = function () {
+  console.log("I hear a scream!");
+};
+
+//Assign the event handler to an event:
+eventEmitter.on("scream", myEventHandler);
+
+//Fire the 'scream' event:
+eventEmitter.emit("scream");
