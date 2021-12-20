@@ -1,54 +1,83 @@
 /*
-!The Built-in HTTP Module
-*Node.js has a built-in module called HTTP, which allows Node.js to transfer data over the Hyper Text Transfer Protocol (HTTP).
-*To include the HTTP module, use the require() method:
-? let http = require('http')
-*Node.js as a Web Server
-The HTTP module can create an HTTP server that listens to server ports and gives a response back to the client.
-Use the createServer() methode to create an HTTP server:
-*Example:
-let http = require('http')
-*create a server object
-http.createServer((req, res) => {
-  res.write('Hello World!') // write a response to the client 
-  res.end() // end the response
-}).listen(8080) // the server object listen on port 8080
-? the function passed into http.createServer() method, will be execute when someone tries to access the computer on port 8080
-*add the http header
-if the response from the http server supposed to be displayed as HTML, you should include an HTTP header with correct content type:
-*Example:
-let http = require('http')
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-type':'text/html'}) // Header
-  res.write('Hello World!')
-  res.end()
-}).listen(8080)
-?the first argument of res.writeHead() method is status code 200 means that all is ok, the second argument is an object containing the response headers.
+!The Node.js file system module allows you to work with the file system on your computer.
+*Common use for the File System module:
+- Read files
+-Create files
+-Update files
+-Delete files
+-Rename files
 */
-// ! Read the Query String
-// ?the function passed into http.createServer() has a req argument that represents the request from the client, as an object (http.IncomingMessage object).
-// ?this object has a property called 'url' which holds the part of the url that comes after the domain name:
-// ! see req.url:
-let http = require("http");
-http
-  .createServer((req, res) => {
-    res.writeHead(200, { "Content-type": "text/html" });
-    res.write(req.url);
-    res.end();
-  })
-  .listen(8000);
+// ?The fs.readFile() method is used to read files on your computer.
+// let http = require("http");
+// let fs = require("fs");
+// http
+//   .createServer((req, res) => {
+//     fs.readFile("./demofile1.html", (err, data) => {
+//       res.writeHead(200, { "Content-type": "text/html" });
+//       res.write(data);
+//       return res.end();
+//     });
+//   })
+//   .listen(8080);
 
-// ! Split the Query String
-// *There are built-in modules to easily split the query string into readable parts, such as the URL module.
-// Example: split the query string into readable parts:
-let url = require("url");
+/*
+?Create files
+*The File System module has methods for creating new files:
+-fs.appendFile()
+-fs.open()
+-fs.writeFile()
+*/
+// ?The fs.appendFile() method appends specified content to a file. If the file does not exist, the file will be created:
+// let fs = require("fs");
+// fs.appendFile("mynewfile1.txt", "Hello Content!", (err) => {
+//   if (err) throw errlog;
+//   console.log("Saved!");
+// });
 
-http
-  .createServer((req, res) => {
-    res.writeHead(200, { "Content-type": "text/html" });
-    let q = url.parse(req.url, true).query;
-    let txt = `${q.year} ${q.month}`;
-    res.write(txt);
-    res.end();
-  })
-  .listen(8080);
+// ?The fs.open() method takes a "flag" as the second argument, if the flag is "w" for "writing", the specified file is opened for writing. If the file does not exist, an empty file is created:
+// let fs = require("fs");
+// fs.open("mynewfile2.txt", "w", (err, file) => {
+//   if (err) throw err;
+//   console.log("Saved!");
+// });
+
+// ?The fs.writeFile() method replaces the specified file and content if it exists. If the file does not exist, a new file, containing the specified content, will be created:
+// let fs = require("fs");
+// fs.writeFile("mynewfile3.txt", "Hello Content!", (err) => {
+//   if (err) throw err;
+//   console.log("Saved!");
+// });
+
+/*
+?Update files
+*The File System module has methods for updating files:
+-fs.appendFile()
+-fs.writeFile()
+*/
+// ?The fs.appendFile() method appends the specified content at the end of the specified file:
+// let fs = require("fs");
+// fs.appendFile("mynewfile1.txt", "This is my text", (err) => {
+//   if (err) throw err;
+//   console.log("Updated!");
+// });
+
+// ?The fs.writeFile() method replaces the specified file and content:
+// let fs = require("fs");
+// fs.writeFile("mynewfile3.txt", "This is my text", (err) => {
+//   if (err) throw err;
+//   console.log("Replaced!");
+// });
+
+// ?The fs.unlink() method deletes the specified file:
+// let fs = require("fs");
+// fs.unlink("mynewfile2.txt", (err) => {
+//   if (err) throw err;
+//   console.log("File Deleted!");
+// });
+
+// ?The fs.rename() method renames the specified file:
+// let fs = require("fs");
+// fs.rename("mynewfile1.txt", "myrenamefile.txt", (err) => {
+//   if (err) throw err;
+//   console.log("File Renamed!");
+// });
