@@ -1,83 +1,94 @@
 /*
-!The Node.js file system module allows you to work with the file system on your computer.
-*Common use for the File System module:
-- Read files
--Create files
--Update files
--Delete files
--Rename files
+?Upload files
+The Formidable Module
+*There is a very good module for working with file uploads, called "Formidable".
+-The Formidable module can be downloaded and installed using NPM: npm install formidable
+-After you have downloaded the Formidable module, you can include the module in any application: let formidable = require('formidable')
 */
-// ?The fs.readFile() method is used to read files on your computer.
+
+// Now you are ready to make a web page in Node.js that lets the user upload files to your computer:
+// !Step 1: Create an Upload Form
+// Create a Node.js file that writes an HTML form, with an upload field:
+// ?Example (This code will produce an HTML form:)
+
 // let http = require("http");
-// let fs = require("fs");
 // http
 //   .createServer((req, res) => {
-//     fs.readFile("./demofile1.html", (err, data) => {
-//       res.writeHead(200, { "Content-type": "text/html" });
-//       res.write(data);
+//     res.writeHead(200, { "Content-type": "text/html" });
+//     res.write(
+//       '<form action="fileupload" method="post" enctype="multipart/form-data">'
+//     );
+//     res.write('<input type="file" name="filetoupload"><br>');
+//     res.write('<input type="submit">');
+//     res.write("</form>");
+//     return res.end();
+//   })
+//   .listen(8080);
+
+// !Step 2: Parse the Uploaded File
+// Include the Formidable module to be able to parse the uploaded file once it reaches the server.
+// When the file is uploaded and parsed, it gets placed on a temporary folder on your computer.
+// ?Example (The file will be uploaded, and placed on a temporary folder:)
+
+// let http = require("http");
+// let formidable = require("formidable");
+
+// http
+//   .createServer((req, res) => {
+//     if (req.url == "/fileuploade") {
+//       let form = new formidable.IncomingForm();
+//       form.parse(req, (err, fields, fiels) => {
+//         res.write("File uploaded");
+//         res.end();
+//       });
+//     } else {
+//       res.writeHead(200, { "Content-Type": "text/html" });
+//       res.write(
+//         '<form action="fileupload" method="post" enctype="multipart/form-data">'
+//       );
+//       res.write('<input type="file" name="filetoupload"><br>');
+//       res.write('<input type="submit">');
+//       res.write("</form>");
 //       return res.end();
-//     });
+//     }
 //   })
 //   .listen(8080);
 
 /*
-?Create files
-*The File System module has methods for creating new files:
--fs.appendFile()
--fs.open()
--fs.writeFile()
+!Step 3: Save the File
+When a file is successfully uploaded to the server, it is placed on a temporary folder.
+
+The path to this directory can be found in the "files" object, passed as the third argument in the parse() method's callback function.
+
+To move the file to the folder of your choice, use the File System module, and rename the file:
 */
-// ?The fs.appendFile() method appends specified content to a file. If the file does not exist, the file will be created:
-// let fs = require("fs");
-// fs.appendFile("mynewfile1.txt", "Hello Content!", (err) => {
-//   if (err) throw errlog;
-//   console.log("Saved!");
-// });
 
-// ?The fs.open() method takes a "flag" as the second argument, if the flag is "w" for "writing", the specified file is opened for writing. If the file does not exist, an empty file is created:
-// let fs = require("fs");
-// fs.open("mynewfile2.txt", "w", (err, file) => {
-//   if (err) throw err;
-//   console.log("Saved!");
-// });
+let http = require("http");
+let formidable = require("formidable");
+let fs = require("fs");
 
-// ?The fs.writeFile() method replaces the specified file and content if it exists. If the file does not exist, a new file, containing the specified content, will be created:
-// let fs = require("fs");
-// fs.writeFile("mynewfile3.txt", "Hello Content!", (err) => {
-//   if (err) throw err;
-//   console.log("Saved!");
-// });
-
-/*
-?Update files
-*The File System module has methods for updating files:
--fs.appendFile()
--fs.writeFile()
-*/
-// ?The fs.appendFile() method appends the specified content at the end of the specified file:
-// let fs = require("fs");
-// fs.appendFile("mynewfile1.txt", "This is my text", (err) => {
-//   if (err) throw err;
-//   console.log("Updated!");
-// });
-
-// ?The fs.writeFile() method replaces the specified file and content:
-// let fs = require("fs");
-// fs.writeFile("mynewfile3.txt", "This is my text", (err) => {
-//   if (err) throw err;
-//   console.log("Replaced!");
-// });
-
-// ?The fs.unlink() method deletes the specified file:
-// let fs = require("fs");
-// fs.unlink("mynewfile2.txt", (err) => {
-//   if (err) throw err;
-//   console.log("File Deleted!");
-// });
-
-// ?The fs.rename() method renames the specified file:
-// let fs = require("fs");
-// fs.rename("mynewfile1.txt", "myrenamefile.txt", (err) => {
-//   if (err) throw err;
-//   console.log("File Renamed!");
-// });
+http
+  .createServer((req, res) => {
+    if (req.url == "/fileupload") {
+      let form = new formidable.IncomingForm();
+      form.parse(req, (err, fields, files) => {
+        let oldPath = files.filetoupload.filepath;
+        let newPath = `C:/Users/Youcode/${files.filetoupload.originalFilename}`;
+        fs.rename(oldPath, newPath, (err) => {
+          if (err) throw err;
+          res.write("File uploaded and moved!");
+          res.end();
+        });
+      });
+    } else {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(
+        '<form action="fileupload" method="post" enctype="multipart/form-data">'
+      );
+      res.write('<input type="file" name="filetoupload"><br>');
+      res.write('<input type="submit">');
+      res.write("</form>");
+      return res.end();
+    }
+  })
+  .listen(8080);
